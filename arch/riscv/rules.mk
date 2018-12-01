@@ -26,14 +26,14 @@ endif
 
 WITH_LINKER_GC ?= 0
 
-LIBGCC := $(shell $(TOOLCHAIN_PREFIX)gcc $(GLOBAL_COMPILEFLAGS) $(GLOBAL_CFLAGS) -print-libgcc-file-name)
-$(info LIBGCC = $(LIBGCC))
-
 cc-option = $(shell if test -z "`$(1) $(2) -S -o /dev/null -xc /dev/null 2>&1`"; \
 	then echo "$(2)"; else echo "$(3)"; fi ;)
 
 ARCH_COMPILEFLAGS :=
 ARCH_OPTFLAGS := -O2
+
+LIBGCC := $(shell $(TOOLCHAIN_PREFIX)gcc $(GLOBAL_COMPILEFLAGS) $(ARCH_COMPILEFLAGS) $(GLOBAL_CFLAGS) -print-libgcc-file-name)
+$(info LIBGCC = $(LIBGCC))
 
 KERNEL_BASE ?= $(MEMBASE)
 KERNEL_LOAD_OFFSET ?= 0

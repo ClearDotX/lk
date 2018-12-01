@@ -31,20 +31,19 @@ void arch_early_init(void)
 {
     LTRACE;
 
-    /* enable i/d cache */
-    uint32_t val = mb_read_msr();
-    val |= (1 << (31 - 26)) | (1 << (31 - 24));
-    mb_write_msr(val);
+    PANIC_UNIMPLEMENTED;
 }
 
 void arch_init(void)
 {
     LTRACE;
+
+    PANIC_UNIMPLEMENTED;
 }
 
 void arch_idle(void)
 {
-    asm volatile("sleep");
+    PANIC_UNIMPLEMENTED;
 }
 
 void arch_chain_load(void *entry, ulong arg0, ulong arg1, ulong arg2, ulong arg3)

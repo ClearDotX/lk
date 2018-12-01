@@ -22,6 +22,7 @@
  */
 #include <asm.h>
 
+#if 0
 .section ".vectors", "ax"
 .globl _vectab
 _vectab:
@@ -39,9 +40,13 @@ _vectab:
 
     # reserved for future
 .fill (0x50 - 0x28)
+#endif
 
 .section ".text.boot"
 FUNCTION(start)
+    j       .
+
+#if 0
     # set the default stack
     addik   r1, r0, default_stack_top
 
@@ -71,6 +76,7 @@ FUNCTION(start)
 
 FUNCTION(unhandled_exception)
     bri     .
+#endif
 
 .bss
 .align 3

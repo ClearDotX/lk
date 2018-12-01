@@ -57,6 +57,9 @@ void arch_thread_initialize(thread_t *t)
 {
     LTRACEF("t %p (%s)\n", t, t->name);
 
+    PANIC_UNIMPLEMENTED;
+
+#if 0
     /* some registers we want to clone for the new thread */
     register uint32_t r2 asm("r2");
     register uint32_t r13 asm("r13");
@@ -71,13 +74,16 @@ void arch_thread_initialize(thread_t *t)
     // NOTE: appears to be bug in binutils 2.25 that forces us to -8 from the offset
     // using this method if gc-sections is enabled.
     *(volatile uint32_t *)&t->arch.cs_frame.r15 -= 8;
+#endif
 }
 
 void arch_context_switch(thread_t *oldthread, thread_t *newthread)
 {
     LTRACEF("old %p (%s), new %p (%s)\n", oldthread, oldthread->name, newthread, newthread->name);
 
-    microblaze_context_switch(&oldthread->arch.cs_frame, &newthread->arch.cs_frame);
+    PANIC_UNIMPLEMENTED;
+
+    //microblaze_context_switch(&oldthread->arch.cs_frame, &newthread->arch.cs_frame);
 }
 
 void arch_dump_thread(thread_t *t)

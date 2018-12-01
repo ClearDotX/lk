@@ -27,20 +27,19 @@
 #include <platform/debug.h>
 #include <platform/timer.h>
 #include <sys/types.h>
-#include <target/microblaze-config.h>
-
-void uartlite_putc(char c);
-int uartlite_getc(bool wait);
 
 void platform_dputc(char c)
 {
+#if 0
     if (c == '\n')
         uartlite_putc('\r');
     uartlite_putc(c);
+#endif
 }
 
 int platform_dgetc(char *c, bool wait)
 {
+#if 0
     for (;;) {
         int ret = uartlite_getc(wait);
         if (ret >= 0) {
@@ -53,6 +52,8 @@ int platform_dgetc(char *c, bool wait)
 
         thread_yield();
     }
+#endif
+    return -1;
 }
 
 

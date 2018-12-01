@@ -22,6 +22,7 @@
  */
 #include <asm.h>
 
+#if 0
 /* void microblaze_context_switch(
     struct microblaze_context_switch_frame *oldcs,
     struct microblaze_context_switch_frame *newcs); */
@@ -75,4 +76,4 @@ FUNCTION(microblaze_context_switch)
 
     rtsd    r15, 8
     nop
-
+#endif

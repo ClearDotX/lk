@@ -1,5 +1,5 @@
-OUTPUT_FORMAT("elf32-microblaze", "elf32-microblaze", "elf32-microblaze")
-OUTPUT_ARCH(microblaze)
+OUTPUT_FORMAT("elf32-littleriscv", "elf32-littleriscv", "elf32-littleriscv")
+OUTPUT_ARCH(riscv)
 
 ENTRY(_start)
 SECTIONS

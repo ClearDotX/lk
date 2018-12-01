@@ -8,7 +8,7 @@ SUBARCH ?= 32
 
 ROMBASE ?= 0x20400000
 MEMBASE ?= 0x80000000
-MEMSIZE ?= 0x10000
+MEMSIZE ?= 0x4000     # 16KB
 
 #include make/module.mk
 

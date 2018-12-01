@@ -31,44 +31,66 @@
 static volatile unsigned int * const gpio_base = (unsigned int *)0x10012000;
 static volatile unsigned int * const uart_base = (unsigned int *)0x10013000;
 
+#define UART_TXDATA 0
+#define UART_RXDATA 1
+#define UART_TXCTRL 2
+#define UART_RXCTRL 3
+#define UART_IE     4
+#define UART_IP     5
+#define UART_DIV    6
+
 static void uart_write(int c) {
-    uart_base[0] = (c & 0xff);
+    uart_base[UART_TXDATA] = (c & 0xff);
 }
 
-static void __uart_init(void) {
+static int uart_read(void) {
+    int c = uart_base[UART_RXDATA];
+    if (c & (1<<31)) {
+        return -1;
+    } else {
+        return c & 0xff;
+    }
+}
+
+static void uart_early_init(void) {
     gpio_base[14] = (3<<16); // io function enable for pin 16/17
 
-    uart_base[6] = 0x9be; // divisor
-    uart_base[2] = 1; // txen
+    uart_base[UART_DIV] = 0x9be; // divisor
+    uart_base[UART_TXCTRL] = 1; // txen
+}
+
+static void uart_init(void) {
+    uart_base[UART_RXCTRL] = 1; // rxen
 }
 
 void platform_early_init(void) {
-    __uart_init();
+    uart_early_init();
 }
 
-void platform_dputc(char c)
-{
+void platform_init(void) {
+    uart_init();
+}
+
+void platform_dputc(char c) {
     if (c == '\n')
         uart_write('\r');
     uart_write(c);
 }
 
-int platform_dgetc(char *c, bool wait)
-{
-#if 0
+int platform_dgetc(char *c, bool wait) {
     for (;;) {
-        int ret = uartlite_getc(wait);
+        int ret = uart_read();
         if (ret >= 0) {
             *c = ret;
             return 0;
         }
 
-        if (!wait)
+        if (!wait) {
             return -1;
+        }
 
         thread_yield();
     }
-#endif
     return -1;
 }
 

@@ -28,4 +28,4 @@
 // XXX is this right?
 #define CACHE_LINE 32
 
-#define ARCH_DEFAULT_STACK_SIZE 4096
+#define ARCH_DEFAULT_STACK_SIZE 1024

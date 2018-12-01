@@ -22,7 +22,7 @@
  */
 #include <compiler.h>
 #include <trace.h>
-#include <arch/microblaze.h>
+#include <arch/riscv.h>
 #include <kernel/thread.h>
 
 #if 0

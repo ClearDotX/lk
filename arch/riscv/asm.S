@@ -22,58 +22,42 @@
  */
 #include <asm.h>
 
-#if 0
-/* void microblaze_context_switch(
-    struct microblaze_context_switch_frame *oldcs,
-    struct microblaze_context_switch_frame *newcs); */
-FUNCTION(microblaze_context_switch)
-    # r5 = oldcs
-    # r6 = newcs
-    swi     r1, r5, 0x0
-    swi     r2, r5, 0x4
-    swi     r13, r5, 0x8
-    swi     r14, r5, 0xc
-    swi     r15, r5, 0x10
-    swi     r16, r5, 0x14
-    swi     r17, r5, 0x18
-    swi     r18, r5, 0x1c
-    swi     r19, r5, 0x20
-    swi     r20, r5, 0x24
-    swi     r21, r5, 0x28
-    swi     r22, r5, 0x2c
-    swi     r23, r5, 0x30
-    swi     r24, r5, 0x34
-    swi     r25, r5, 0x38
-    swi     r26, r5, 0x3c
-    swi     r27, r5, 0x40
-    swi     r28, r5, 0x44
-    swi     r29, r5, 0x48
-    swi     r30, r5, 0x4c
-    swi     r31, r5, 0x50
+/* void riscv32_context_switch(
+    struct riscv32_context_switch_frame *oldcs,
+    struct riscv32_context_switch_frame *newcs); */
+FUNCTION(riscv32_context_switch)
+    # a0 = oldcs
+    # a1 = newcs
+    sw     ra, 0(a0)
+    sw     sp, 4(a0)
+    sw     tp, 8(a0)
+    sw     s0, 12(a0)
+    sw     s1, 16(a0)
+    sw     s2, 20(a0)
+    sw     s3, 24(a0)
+    sw     s4, 28(a0)
+    sw     s5, 32(a0)
+    sw     s6, 36(a0)
+    sw     s7, 40(a0)
+    sw     s8, 44(a0)
+    sw     s9, 48(a0)
+    sw     s10, 52(a0)
+    sw     s11, 56(a0)
 
-    # restore the new context
-    lwi     r31, r6, 0x50
-    lwi     r30, r6, 0x4c
-    lwi     r29, r6, 0x48
-    lwi     r28, r6, 0x44
-    lwi     r27, r6, 0x40
-    lwi     r26, r6, 0x3c
-    lwi     r25, r6, 0x38
-    lwi     r24, r6, 0x34
-    lwi     r23, r6, 0x30
-    lwi     r22, r6, 0x2c
-    lwi     r21, r6, 0x28
-    lwi     r20, r6, 0x24
-    lwi     r19, r6, 0x20
-    lwi     r18, r6, 0x1c
-    lwi     r17, r6, 0x18
-    lwi     r16, r6, 0x14
-    lwi     r15, r6, 0x10
-    lwi     r14, r6, 0xc
-    lwi     r13, r6, 0x8
-    lwi     r2, r6, 0x4
-    lwi     r1, r6, 0x0
+    lw     s11, 56(a1)
+    lw     s10, 52(a1)
+    lw     s9, 48(a1)
+    lw     s8, 44(a1)
+    lw     s7, 40(a1)
+    lw     s6, 36(a1)
+    lw     s5, 32(a1)
+    lw     s4, 28(a1)
+    lw     s3, 24(a1)
+    lw     s2, 20(a1)
+    lw     s1, 16(a1)
+    lw     s0, 12(a1)
+    lw     tp, 8(a1)
+    lw     sp, 4(a1)
+    lw     ra, 0(a1)
 
-    rtsd    r15, 8
-    nop
-#endif
+    ret

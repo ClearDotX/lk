@@ -35,11 +35,15 @@ static void uart_write(int c) {
     uart_base[0] = (c & 0xff);
 }
 
-void __uart_init(void) {
+static void __uart_init(void) {
     gpio_base[14] = (3<<16); // io function enable for pin 16/17
 
     uart_base[6] = 0x9be; // divisor
     uart_base[2] = 1; // txen
+}
+
+void platform_early_init(void) {
+    __uart_init();
 }
 
 void platform_dputc(char c)

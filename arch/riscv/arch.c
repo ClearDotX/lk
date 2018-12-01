@@ -30,15 +30,11 @@
 void arch_early_init(void)
 {
     LTRACE;
-
-    PANIC_UNIMPLEMENTED;
 }
 
 void arch_init(void)
 {
     LTRACE;
-
-    PANIC_UNIMPLEMENTED;
 }
 
 void arch_idle(void)

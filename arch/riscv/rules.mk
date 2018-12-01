@@ -37,9 +37,10 @@ $(info LIBGCC = $(LIBGCC))
 
 KERNEL_BASE ?= $(MEMBASE)
 KERNEL_LOAD_OFFSET ?= 0
-VECTOR_BASE_PHYS ?= 0
+ROMBASE ?= 0x20400000
 
 GLOBAL_DEFINES += \
+    ROMBASE=$(ROMBASE) \
     MEMBASE=$(MEMBASE) \
     MEMSIZE=$(MEMSIZE)
 
@@ -51,7 +52,7 @@ GENERATED += \
 $(BUILDDIR)/linker.ld: $(LOCAL_DIR)/linker.ld $(wildcard arch/*.ld) linkerscript.phony
 	@echo generating $@
 	@$(MKDIR)
-	$(NOECHO)sed "s/%MEMBASE%/$(MEMBASE)/;s/%MEMSIZE%/$(MEMSIZE)/;s/%KERNEL_BASE%/$(KERNEL_BASE)/;s/%KERNEL_LOAD_OFFSET%/$(KERNEL_LOAD_OFFSET)/;s/%VECTOR_BASE_PHYS%/$(VECTOR_BASE_PHYS)/" < $< > $@.tmp
+	$(NOECHO)sed "s/%ROMBASE%/$(ROMBASE)/;s/%MEMBASE%/$(MEMBASE)/;s/%MEMSIZE%/$(MEMSIZE)/;s/%KERNEL_BASE%/$(KERNEL_BASE)/;s/%KERNEL_LOAD_OFFSET%/$(KERNEL_LOAD_OFFSET)/;s/%VECTOR_BASE_PHYS%/$(VECTOR_BASE_PHYS)/" < $< > $@.tmp
 	@$(call TESTANDREPLACEFILE,$@.tmp,$@)
 
 linkerscript.phony:

@@ -29,52 +29,30 @@
 
 static inline void arch_enable_ints(void)
 {
-    PANIC_UNIMPLEMENTED;
-#if 0
-    CF;
-    uint32_t temp;
+    unsigned long val = (1 << 1); // supervisor interrrupt enable
     __asm__ volatile(
-#if USE_MSRSET
-        "msrset %0, (1<<1)"
-#else
-        "mfs    %0, rmsr;"
-        "ori    %0, %0, (1<<1);"
-        "mts    rmsr, %0"
-#endif
-        : "=r" (temp));
-#endif
+        "csrs   sstatus, %0"
+        :: "rK" (val)
+        : "memory");
 }
 
 static inline void arch_disable_ints(void)
 {
-    PANIC_UNIMPLEMENTED;
-#if 0
-    uint32_t temp;
+    unsigned long val = (1 << 1); // supervisor interrrupt enable
     __asm__ volatile(
-#if USE_MSRSET
-        "msrclr %0, (1<<1)"
-#else
-        "mfs    %0, rmsr;"
-        "andni  %0, %0, (1<<1);"
-        "mts    rmsr, %0"
-#endif
-        : "=r" (temp));
-    CF;
-#endif
+        "csrc   sstatus, %0"
+        :: "rK" (val)
+        : "memory");
 }
 
 static inline bool arch_ints_disabled(void)
 {
-    PANIC_UNIMPLEMENTED;
-#if 0
-    uint32_t state;
-
+    unsigned long val;
     __asm__ volatile(
-        "mfs    %0, rmsr;"
-        : "=r" (state));
-
-    return !(state & (1<<1));
-#endif
+        "csrr   %0, sstatus"
+        : "=r" (val)
+        :: "memory");
+    return !(val & (1 << 1));
 }
 
 static inline int atomic_add(volatile int *ptr, int val)

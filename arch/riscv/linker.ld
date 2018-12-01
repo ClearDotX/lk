@@ -5,20 +5,14 @@ ENTRY(_start)
 SECTIONS
 {
     . = %ROMBASE%;
-    . = %KERNEL_BASE% + %KERNEL_LOAD_OFFSET%;
-
-    _start = .;
-
-    /* vector table goes at 0, for qemu target, at least */
-    .vectors : AT(%VECTOR_BASE_PHYS%) {
-        KEEP(*(.vectors))
-    }
+    __rom_start = .;
 
     /* text/read-only data */
     /* set the load address to physical MEMBASE */
-    .text : AT(%MEMBASE% + %KERNEL_LOAD_OFFSET% + SIZEOF(.vectors)) {
+    .text : {
         KEEP(*(.text.boot))
-        *(.text* .gnu.linkonce.t.*)
+        *(.text .text*)
+        *(.gnu.linkonce.t.*)
     }
 
     .interp : { *(.interp) }
@@ -49,12 +43,8 @@ SECTIONS
     .plt : { *(.plt) }
 
     .rodata : ALIGN(4) {
-        __rodata_start = .;
         *(.rodata .rodata.* .gnu.linkonce.r.*)
-        . = ALIGN(4);
-        _SDATA2_START__ = .;
-        *(.sdata2)
-        _SDATA2_END__ = .;
+        *(.srodata*)
     }
 
     /*
@@ -64,14 +54,20 @@ SECTIONS
      */
     .dummy_post_rodata : {
         __rodata_end = .;
+        __rom_end = . ;
+        __data_start_rom = .;
     }
 
-    .data : ALIGN(4) {
-        /* writable data  */
-        __data_start_rom = .;
+    /* in two segment binaries, the data starts at the bottom of ram (MEMBASE)
+     * bump us forward to the start of ram
+     */
+    . = %MEMBASE%;
+
+    .data : AT ( ADDR (.dummy_post_rodata) + SIZEOF (.dummy_post_rodata) ) ALIGN(4) {
         /* in one segment binaries, the rom data address is on top of the ram data address */
         __data_start = .;
         *(.data .data.* .gnu.linkonce.d.*)
+        *(.sdata .sdata.*)
         __ctor_list = .;
         KEEP(*(.ctors .init_array))
         __ctor_end = .;
@@ -80,11 +76,6 @@ SECTIONS
         __dtor_end = .;
         *(.got*)
         *(.dynamic)
-
-        /* read-write small data with initial value */
-        _SDATA_START__ = .;
-        *(.sdata)
-        _SDATA_END__ = .;
     }
 
     /*
@@ -99,21 +90,10 @@ SECTIONS
     /* uninitialized data (in same segment as writable data) */
     .bss : ALIGN(4) {
         __bss_start = .;
-
-        /* read only small variables without initial value */
-        _SBSS2_START__ = .;
-        *(.sbss2*)
-        _SBSS2_END__ = .;
-
-        /* read-write small variables without initial value */
-        _sbss_start__ = .;
-        *(.sbss*)
-        _sbss_end__ = .;
-
         /* regular bss */
         *(.bss .bss.*)
+        *(.sbss .sbss.*)
         *(.gnu.linkonce.b.*)
-        *(COMMON)
 
         . = ALIGN(4);
         __bss_end = .;
@@ -121,7 +101,7 @@ SECTIONS
 
     _end = .;
 
-    . = %KERNEL_BASE% + %MEMSIZE%;
+    . = %MEMBASE% + %MEMSIZE%;
     _end_of_ram = .;
 
     /* Strip unnecessary stuff */

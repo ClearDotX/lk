@@ -810,8 +810,6 @@ void thread_init_early(void)
     thread_t *t = idle_thread(0);
     init_thread_struct(t, "bootstrap");
 
-    for (;;);
-
     /* half construct this thread, since we're already running */
     t->priority = HIGHEST_PRIORITY;
     t->state = THREAD_RUNNING;

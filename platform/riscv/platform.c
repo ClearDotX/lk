@@ -28,13 +28,25 @@
 #include <platform/timer.h>
 #include <sys/types.h>
 
+static volatile unsigned int * const gpio_base = (unsigned int *)0x10012000;
+static volatile unsigned int * const uart_base = (unsigned int *)0x10013000;
+
+static void uart_write(int c) {
+    uart_base[0] = (c & 0xff);
+}
+
+void __uart_init(void) {
+    gpio_base[14] = (3<<16); // io function enable for pin 16/17
+
+    uart_base[6] = 0x9be; // divisor
+    uart_base[2] = 1; // txen
+}
+
 void platform_dputc(char c)
 {
-#if 0
     if (c == '\n')
-        uartlite_putc('\r');
-    uartlite_putc(c);
-#endif
+        uart_write('\r');
+    uart_write(c);
 }
 
 int platform_dgetc(char *c, bool wait)

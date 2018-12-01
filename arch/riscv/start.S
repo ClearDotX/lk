@@ -44,6 +44,20 @@ _vectab:
 
 .section ".text.boot"
 FUNCTION(start)
+    # set the default stack
+    la      sp, default_stack_top
+
+    # zero bss
+    la      t0, __bss_start
+    la      t1, __bss_end
+.L0:
+    sw      x0, (t0)
+    add     t0, t0, 4
+    bne     t0, t1, .L0
+
+    # call main
+    jal     lk_main
+
     j       .
 
 #if 0
@@ -79,7 +93,7 @@ FUNCTION(unhandled_exception)
 #endif
 
 .bss
-.align 3
+.align 4
 LOCAL_DATA(default_stack)
     .skip 4096
 LOCAL_DATA(default_stack_top)

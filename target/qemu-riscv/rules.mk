@@ -6,8 +6,8 @@ GLOBAL_INCLUDES += \
 PLATFORM := riscv
 SUBARCH ?= 32
 
-MEMBASE ?= 0x0
-MEMSIZE ?= 0x0
+MEMBASE ?= 0x20400000
+MEMSIZE ?= 0x100000
 
 #include make/module.mk
 

@@ -4,6 +4,7 @@ OUTPUT_ARCH(riscv)
 ENTRY(_start)
 SECTIONS
 {
+    . = %ROMBASE%;
     . = %KERNEL_BASE% + %KERNEL_LOAD_OFFSET%;
 
     _start = .;

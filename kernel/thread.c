@@ -114,7 +114,7 @@ static void insert_in_run_queue_tail(thread_t *t)
     run_queue_bitmap |= (1<<t->priority);
 }
 
-static void init_thread_struct(thread_t *t, const char *name)
+__NO_INLINE void init_thread_struct(thread_t *t, const char *name)
 {
     memset(t, 0, sizeof(thread_t));
     t->magic = THREAD_MAGIC;
@@ -809,6 +809,8 @@ void thread_init_early(void)
     /* create a thread to cover the current running state */
     thread_t *t = idle_thread(0);
     init_thread_struct(t, "bootstrap");
+
+    for (;;);
 
     /* half construct this thread, since we're already running */
     t->priority = HIGHEST_PRIORITY;

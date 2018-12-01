@@ -25,6 +25,7 @@
 #include <arch/microblaze.h>
 #include <kernel/thread.h>
 
+#if 0
 void microblaze_irq(void) __attribute__((interrupt_handler));
 
 enum handler_return platform_irq_handler(void);
@@ -34,4 +35,4 @@ void microblaze_irq(void)
     if (platform_irq_handler() == INT_RESCHEDULE)
         thread_preempt();
 }
-
+#endif

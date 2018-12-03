@@ -2,20 +2,12 @@ LOCAL_DIR := $(GET_LOCAL_DIR)
 
 MODULE := $(LOCAL_DIR)
 
-MODULE_SRCS += \
-	$(LOCAL_DIR)/start.S \
-	$(LOCAL_DIR)/arch.c \
-	$(LOCAL_DIR)/asm.S \
-	$(LOCAL_DIR)/exceptions.c \
-	$(LOCAL_DIR)/intc_timer.c \
-	$(LOCAL_DIR)/thread.c \
-
-#	$(LOCAL_DIR)/cache.c \
-	$(LOCAL_DIR)/cache-ops.S \
-	$(LOCAL_DIR)/ops.S \
-	$(LOCAL_DIR)/mmu.c \
-	$(LOCAL_DIR)/faults.c \
-	$(LOCAL_DIR)/descriptor.c
+MODULE_SRCS += $(LOCAL_DIR)/start.S
+MODULE_SRCS += $(LOCAL_DIR)/arch.c
+MODULE_SRCS += $(LOCAL_DIR)/asm.S
+MODULE_SRCS += $(LOCAL_DIR)/clint.c
+MODULE_SRCS += $(LOCAL_DIR)/exceptions.c
+MODULE_SRCS += $(LOCAL_DIR)/thread.c
 
 GLOBAL_DEFINES += \
 	SMP_MAX_CPUS=1

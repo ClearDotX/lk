@@ -29,6 +29,7 @@
 
 #define RISCV_MIE_MSIE          (1u << 3)
 #define RISCV_MIE_MTIE          (1u << 7)
+#define RISCV_MIE_SEIE          (1u << 9)
 #define RISCV_MIE_MEIE          (1u << 11)
 
 #define RISCV_MIP_MSIP          (1u << 3)

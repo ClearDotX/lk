@@ -20,53 +20,16 @@
  * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-#include <compiler.h>
-#include <trace.h>
-#include <arch/riscv.h>
-#include <kernel/thread.h>
+#pragma once
 
-#define LOCAL_TRACE 0
+#include <stdbool.h>
 
-// keep in sync with asm.S
-struct riscv_short_iframe {
-    ulong  mepc;
-    ulong  ra;
-    ulong  a0;
-    ulong  a1;
-    ulong  a2;
-    ulong  a3;
-    ulong  a4;
-    ulong  a5;
-    ulong  a6;
-    ulong  a7;
-    ulong  t0;
-    ulong  t1;
-    ulong  t2;
-    ulong  t3;
-    ulong  t4;
-    ulong  t5;
-    ulong  t6;
-};
+void sifive_uart_write(int c);
+int sifive_uart_read(char *c, bool wait);
+void sifive_uart_early_init(void);
+void sifive_uart_init(void);
 
-extern enum handler_return riscv_platform_irq(void);
+void plic_early_init(void);
+void plic_init(void);
 
-void riscv_exception_handler(ulong cause, ulong epc, struct riscv_short_iframe *frame) {
-    LTRACEF("cause %#lx epc %#lx\n", cause, epc);
 
-    enum handler_return ret = INT_NO_RESCHEDULE;
-    switch (cause) {
-        case 0x80000007: // machine timer interrupt
-            ret = riscv_timer_exception();
-            break;
-        case 0x8000000b: // machine external interrupt
-            ret = riscv_platform_irq();
-            break;
-        default:
-            TRACEF("unhandled cause %#lx, epc %#lx\n", cause, epc);
-            panic("stopping");
-    }
-
-    if (ret == INT_RESCHEDULE) {
-        thread_preempt();
-    }
-}

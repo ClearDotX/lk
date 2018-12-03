@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 Travis Geiselbrecht
+ * Copyright (c) 2018 Travis Geiselbrecht
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files
@@ -20,34 +20,15 @@
  * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-#include <reg.h>
-#include <kernel/thread.h>
-#include <platform.h>
-#include <platform/interrupts.h>
-#include <platform/debug.h>
-#include <platform/timer.h>
-#include <sys/types.h>
+#pragma once
 
-#include "platform_p.h"
+#define SIFIVE_IRQ_UART0 3
+#define SIFIVE_IRQ_UART1 4
 
-void platform_early_init(void) {
-    plic_early_init();
-    sifive_uart_early_init();
-}
+#define SIFIVE_NUM_IRQS 127
 
-void platform_init(void) {
-    plic_init();
-    sifive_uart_init();
-}
-
-void platform_dputc(char c) {
-    if (c == '\n')
-        sifive_uart_write('\r');
-    sifive_uart_write(c);
-}
-
-int platform_dgetc(char *c, bool wait) {
-    return sifive_uart_read(c, wait);
-}
-
+#define CLINT_BASE 0x02000000
+#define PLIC_BASE  0x0c000000
+#define GPIO_BASE  0x10012000
+#define UART0_BASE 0x10013000
 

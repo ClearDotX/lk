@@ -25,7 +25,7 @@
 #include <stdint.h>
 #include <arch/riscv.h>
 
-#define LOCAL_TRACE 1
+#define LOCAL_TRACE 0
 
 void arch_early_init(void)
 {
@@ -34,17 +34,22 @@ void arch_early_init(void)
 
     // mask all exceptions, just in case
     riscv_csr_clear(mstatus, RISCV_STATUS_MIE);
-    riscv_csr_clear(mie, RISCV_MIE_MTIE | RISCV_MIE_MSIE | RISCV_MIE_MEIE | (0xffff << 16));
+    riscv_csr_clear(mie, RISCV_MIE_MTIE | RISCV_MIE_MSIE | RISCV_MIE_SEIE | RISCV_MIE_MEIE);
+
+    // enable cycle counter
+    riscv_csr_set(mcounteren, 1);
 }
 
 void arch_init(void)
 {
-    LTRACE;
+    // enable external interrupts
+    riscv_csr_set(mie, RISCV_MIE_MEIE);
 }
 
 void arch_idle(void)
 {
-    __asm__ volatile("wfi");
+    // disabled for now, QEMU seems to have some trouble emulating wfi properly
+//    __asm__ volatile("wfi");
 }
 
 void arch_chain_load(void *entry, ulong arg0, ulong arg1, ulong arg2, ulong arg3)

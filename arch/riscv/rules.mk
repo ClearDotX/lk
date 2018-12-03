@@ -7,6 +7,7 @@ MODULE_SRCS += \
 	$(LOCAL_DIR)/arch.c \
 	$(LOCAL_DIR)/asm.S \
 	$(LOCAL_DIR)/exceptions.c \
+	$(LOCAL_DIR)/intc_timer.c \
 	$(LOCAL_DIR)/thread.c \
 
 #	$(LOCAL_DIR)/cache.c \

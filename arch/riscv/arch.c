@@ -25,11 +25,16 @@
 #include <stdint.h>
 #include <arch/riscv.h>
 
-#define LOCAL_TRACE 0
+#define LOCAL_TRACE 1
 
 void arch_early_init(void)
 {
-    LTRACE;
+    // set the top level exception handler
+    riscv_csr_write(mtvec, (uintptr_t)&riscv_exception_entry);
+
+    // mask all exceptions, just in case
+    riscv_csr_clear(mstatus, RISCV_STATUS_MIE);
+    riscv_csr_clear(mie, RISCV_MIE_MTIE | RISCV_MIE_MSIE | RISCV_MIE_MEIE | (0xffff << 16));
 }
 
 void arch_init(void)

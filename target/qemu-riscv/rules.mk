@@ -1,13 +1,10 @@
 LOCAL_DIR := $(GET_LOCAL_DIR)
 
-GLOBAL_INCLUDES += \
-	$(LOCAL_DIR)/include
+GLOBAL_INCLUDES += $(LOCAL_DIR)/include
 
-PLATFORM := riscv
+PLATFORM := sifive
 SUBARCH ?= 32
 
-ROMBASE ?= 0x20400000
-MEMBASE ?= 0x80000000
 MEMSIZE ?= 0x4000     # 16KB
 
 #include make/module.mk

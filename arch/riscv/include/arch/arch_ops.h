@@ -24,35 +24,19 @@
 
 #include <compiler.h>
 #include <debug.h>
+#include <arch/riscv.h>
 
-#define USE_MSRSET 1
-
-static inline void arch_enable_ints(void)
-{
-    unsigned long val = (1 << 1); // supervisor interrrupt enable
-    __asm__ volatile(
-        "csrs   sstatus, %0"
-        :: "rK" (val)
-        : "memory");
+static inline void arch_enable_ints(void) {
+    riscv_csr_set(mstatus, RISCV_STATUS_MIE);
 }
 
-static inline void arch_disable_ints(void)
-{
-    unsigned long val = (1 << 1); // supervisor interrrupt enable
-    __asm__ volatile(
-        "csrc   sstatus, %0"
-        :: "rK" (val)
-        : "memory");
+static inline void arch_disable_ints(void) {
+    riscv_csr_clear(mstatus, RISCV_STATUS_MIE);
 }
 
-static inline bool arch_ints_disabled(void)
-{
-    unsigned long val;
-    __asm__ volatile(
-        "csrr   %0, sstatus"
-        : "=r" (val)
-        :: "memory");
-    return !(val & (1 << 1));
+static inline bool arch_ints_disabled(void) {
+    ulong val = riscv_csr_read(mstatus);
+    return !(val & RISCV_STATUS_MIE);
 }
 
 static inline int atomic_add(volatile int *ptr, int val)
@@ -88,7 +72,12 @@ static inline void set_current_thread(struct thread *t)
     _current_thread = t;
 }
 
-static inline uint32_t arch_cycle_count(void) { return 0; }
+static inline uint32_t arch_cycle_count(void) {
+    uint32_t count;
+
+    __asm__("rdcycle %0" : "=r"(count));
+    return count;
+}
 
 static inline uint arch_curr_cpu_num(void)
 {

@@ -25,14 +25,42 @@
 #include <arch/riscv.h>
 #include <kernel/thread.h>
 
-#if 0
-void microblaze_irq(void) __attribute__((interrupt_handler));
+#define LOCAL_TRACE 0
 
-enum handler_return platform_irq_handler(void);
+// keep in sync with asm.S
+struct riscv_short_iframe {
+    ulong  mepc;
+    ulong  ra;
+    ulong  a0;
+    ulong  a1;
+    ulong  a2;
+    ulong  a3;
+    ulong  a4;
+    ulong  a5;
+    ulong  a6;
+    ulong  a7;
+    ulong  t0;
+    ulong  t1;
+    ulong  t2;
+    ulong  t3;
+    ulong  t4;
+    ulong  t5;
+    ulong  t6;
+};
 
-void microblaze_irq(void)
-{
-    if (platform_irq_handler() == INT_RESCHEDULE)
+void riscv_exception_handler(ulong cause, ulong epc, struct riscv_short_frame *frame) {
+    LTRACEF("cause %#lx epc %#lx\n", cause, epc);
+
+    enum handler_return ret = INT_NO_RESCHEDULE;
+    switch (cause) {
+        case 0x80000007: // local timer
+            ret = riscv_timer_exception();
+            break;
+        default:
+            TRACEF("unhandled cause %#lx, epc %#lx\n", cause, epc);
+    }
+
+    if (ret == INT_RESCHEDULE) {
         thread_preempt();
+    }
 }
-#endif

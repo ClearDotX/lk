@@ -111,5 +111,5 @@ FUNCTION(unhandled_exception)
 .bss
 .align 4
 LOCAL_DATA(default_stack)
-    .skip 4096
+    .skip 1024
 LOCAL_DATA(default_stack_top)
